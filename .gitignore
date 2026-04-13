@@ -1,0 +1,40 @@
+# Environment variables (IMPORTANT: Never commit sensitive data!)
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependencies
+node_modules
+package-lock.json
+yarn.lock
+
+# IDE
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Build
+dist
+dist-ssr
+*.local
+
+# OS
+Thumbs.db
+
+# Temp files
+*.tmp
+.temp
