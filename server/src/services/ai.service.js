@@ -96,11 +96,11 @@ async function generateInterviewReport({
     contents: prompt,
     config: {
       responseMimeType: "application/json",
-      responseJsonSchema: zodToJsonSchema(interviewReportSchema),
+      responseSchema: zodToJsonSchema(interviewReportSchema),
     },
   });
 
-  console.log(response.text);
+  return JSON.parse(response.text);
 }
 
 export { generateInterviewReport };
