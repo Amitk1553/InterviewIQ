@@ -1,7 +1,10 @@
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const pdfParse = require("pdf-parse");
-import { generateInterviewReport } from "../services/ai.service.js";
+import {
+  generateInterviewReport,
+  generateResumePdf,
+} from "../services/ai.service.js";
 import InterviewReportModel from "../models/interviewReport.model.js";
 
 /**
@@ -75,7 +78,13 @@ async function getInterviewReportByIdController(req, res) {
 
 async function getAllInterviewReportsController(req, res) {
   try {
-    const interviewReports = (await InterviewReportModel.find({ user: req.user.id })).sort({ createdAt: -1 }).select("-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan");
+    const interviewReports = await InterviewReportModel.find({
+      user: req.user.id,
+    })
+      .sort({ createdAt: -1 })
+      .select(
+        "-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan",
+      );
     res.status(200).json({
       message: "Interview reports fetched successfully",
       interviewReports: interviewReports,
@@ -89,8 +98,36 @@ async function getAllInterviewReportsController(req, res) {
   }
 }
 
+/**
+ * @desc controller to Generate resume pdf on the basis of user self description and job description.
+ */
+async function generateResumePdfController(req, res) {
+  const { interviewReportId } = req.params;
+
+  const interviewReport =
+    await InterviewReportModel.findById(interviewReportId);
+  if (!interviewReport) {
+    return res.status(404).json({ message: "Interview report not found" });
+  }
+
+  const { resume, jobDescription, selfDescription } = interviewReport;
+
+  const pdfBuffer = await generateResumePdf({
+    resume,
+    jobDescription,
+    selfDescription,
+  });
+
+  res.set({
+    "Content-Type": "application/pdf",
+    "Content-Disposition": `attachment; filename=resume_${interviewReportId}.pdf`,
+  });
+  res.send(pdfBuffer);
+}
+
 export default {
   generateInterviewReportController,
   getInterviewReportByIdController,
   getAllInterviewReportsController,
+  generateResumePdfController,
 };
