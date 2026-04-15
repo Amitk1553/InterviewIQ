@@ -1,92 +1,92 @@
-import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf } from "../services/interview.api.js";
+import { getAllInterviewReports, generateInterviewReport, getInterviewReportById, generateResumePdf } from "../services/interview.api";
 import { useContext, useEffect } from "react";
-import { InterviewContext } from "../interview.context.jsx";
+import { InterviewContext } from "../interview.context";
 import { useParams } from "react-router";
-
 
 export const useInterview = () => {
     const context = useContext(InterviewContext);
-    const { interviewId } = useParams()
-    if (!context) {
+    const { interviewId } = useParams();
+
+    if(!context) {
         throw new Error("useInterview must be used within an InterviewProvider");
     }
 
     const { loading, setLoading, report, setReport, reports, setReports } = context;
 
-    const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {
-        setLoading(true);
-        let response = null
+    const generateReport = async ({ jobDescription, selfDescription, resumeFile }) => {  
+        setLoading(true); 
+        let response = null;      
         try {
-            const response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile });
+            response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile });
             setReport(response.interviewReport);
         } catch (error) {
-            console.error("Error generating interview report:", error);
-            throw error;
+            console.error(error); 
+            throw error; 
         } finally {
             setLoading(false);
         }
-
-        return response.interviewReport
+        return response.interviewReport; 
     }
 
     const getReportById = async (interviewId) => {
         setLoading(true);
-        let response = null
+        let response = null;
         try {
-            const response = await getInterviewReportById(interviewId);
+            response = await getInterviewReportById(interviewId);
             setReport(response.interviewReport);
         } catch (error) {
-            console.error("Error fetching interview report:", error);
+            console.error(error);
             throw error;
         } finally {
             setLoading(false);
         }
-        return response.interviewReport
-    };
+        return response?.interviewReport;
+    }
 
     const getReports = async () => {
         setLoading(true);
-        let response = null
+        let response = null;
         try {
-            const response = await getAllInterviewReports();
+            response = await getAllInterviewReports();
             setReports(response.interviewReports);
         } catch (error) {
-            console.error("Error fetching interview reports:", error);
+            console.error(error);
             throw error;
         } finally {
             setLoading(false);
         }
-        return response.interviewReports
-    };
+        return response?.interviewReports; 
+    }
+
 
     const getResumePdf = async (interviewReportId) => {
         setLoading(true);
-        let response = null
         try {
-            const response = await generateResumePdf({ interviewReportId });
-            const url = window.URL.createObjectURL(new Blob([response], { type: "application/pdf" }));
-            const link = document.createElement("a");
-            link.href = url
-            link.setAttribute("download", `resume_${interviewReportId}.pdf`);
+            const response = await generateResumePdf(interviewReportId);
+            const url = window.URL.createObjectURL(new Blob([response], { type: 'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `resume_${interviewReportId}.pdf`);
             document.body.appendChild(link);
             link.click();
-        } catch (error) {
-            console.error("Error generating resume PDF:", error);
-            throw error;
-        } finally {
-            setLoading(false);
+            document.body.removeChild(link); // 🚀 FIX: Cleans up the invisible link from the browser
         }
-        return response;
-    };
-
+        catch (error) {
+            console.error("PDF Download Error:", error);
+            alert("Failed to download PDF. Please try again.");
+        } finally {
+            setLoading(false);  
+        }
+    }
 
     useEffect(() => {
-        if (interviewId) {
-            getReportById(interviewId)
+        if(interviewId) {
+            getReportById(interviewId);
         } else {
-            getReports()
+            getReports();
         }
     }, [interviewId]);
-
+    
+    
     return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf };
-}
+};

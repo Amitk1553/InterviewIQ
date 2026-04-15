@@ -17,19 +17,38 @@ async function generateInterviewReportController(req, res) {
       Uint8Array.from(req.file.buffer),
     ).getText();
     const { selfDescription, jobDescription } = req.body;
-
+    console.log("Resume content:", resumeContent.text);
+    console.log("Self description:", selfDescription);
+    console.log("Job description:", jobDescription);
     const interviewReportByAi = await generateInterviewReport({
       resume: resumeContent.text,
       selfDescription,
       jobDescription,
     });
+
+    // Attempt to parse the AI output if it comes back as strings
+    let parsedAiData = { ...interviewReportByAi };
+    
+    try {
+      if (typeof parsedAiData.technicalQuestions === 'string') parsedAiData.technicalQuestions = JSON.parse(parsedAiData.technicalQuestions);
+      if (typeof parsedAiData.behavioralQuestions === 'string') parsedAiData.behavioralQuestions = JSON.parse(parsedAiData.behavioralQuestions);
+      if (typeof parsedAiData.skillGaps === 'string') parsedAiData.skillGaps = JSON.parse(parsedAiData.skillGaps);
+      if (typeof parsedAiData.preparationPlan === 'string') parsedAiData.preparationPlan = JSON.parse(parsedAiData.preparationPlan);
+    } catch (parseError) {
+      console.error("Failed to parse AI JSON. Ensure the AI is returning strict JSON.", parseError);
+      return res.status(500).json({ message: "AI returned invalid data format." });
+    }
+
     const interviewReport = await InterviewReportModel.create({
       user: req.user.id,
       resume: resumeContent.text,
       selfDescription,
       jobDescription,
-      ...interviewReportByAi,
+      ...parsedAiData, // Use the parsed data here
     });
+    console.log("interviewReportByAi",interviewReportByAi);
+    console.log("interviewReportBy",interviewReport);
+
     res.status(201).json({
       message: "Interview report generated successfully",
       interviewReport: interviewReport,
@@ -85,6 +104,8 @@ async function getAllInterviewReportsController(req, res) {
       .select(
         "-resume -selfDescription -jobDescription -__v -technicalQuestions -behavioralQuestions -skillGaps -preparationPlan",
       );
+      console.log("Fetched interview reports:", interviewReports);
+      console.log(req.user.id);
     res.status(200).json({
       message: "Interview reports fetched successfully",
       interviewReports: interviewReports,
