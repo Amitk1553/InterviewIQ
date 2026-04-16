@@ -1,0 +1,136 @@
+/**
+ * _theme-variables.scss
+ * Defines SCSS variables for both Dark and Cream themes
+ * These variables are applied based on the active theme class
+ */
+
+// ===== DARK THEME =====
+.app-dark {
+  // Background colors
+  --bg-primary: #0d0d0d;
+  --bg-secondary: #1a1a1a;
+  --bg-tertiary: #2a2a2a;
+
+  // Interview specific backgrounds
+  --bg-page: #0d1117;
+  --bg-card: #161b22;
+  --bg-panel: #1c2230;
+  --bg-input: #1e2535;
+  --border-color: #2a3348;
+  --info-bg: #1b2a4a;
+  --info-border: #2d4a7a;
+
+  // Text colors
+  --text-primary: #ffffff;
+  --text-secondary: #e0e0e0;
+  --text-muted: #7d8590;
+
+  // Accent colors
+  --accent-primary: #ff2d78;
+  --accent-hover: #ff6b9d;
+  --accent-dark: #d91e63;
+
+  // Input/Form colors
+  --input-bg: #ffffff;
+  --input-border: #cccccc;
+  --input-text: #333333;
+  --input-placeholder: #999999;
+
+  // Icon colors
+  --icon-default: #666666;
+  --icon-hover: #ff2d78;
+
+  // Shadows
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+// ===== CREAM THEME =====
+.app-cream {
+  // Background colors
+  --bg-primary: #faf8f3;
+  --bg-secondary: #f5f3ed;
+  --bg-tertiary: #efe9e0;
+
+  // Interview specific backgrounds - adapted for cream theme
+  --bg-page: #faf8f3;
+  --bg-card: #f5f3ed;
+  --bg-panel: #efe9e0;
+  --bg-input: #ffffff;
+  --border-color: #e0d5cc;
+  --info-bg: #f0e6d8;
+  --info-border: #d4c5b9;
+
+  // Text colors
+  --text-primary: #2d2520;
+  --text-secondary: #4a4540;
+  --text-muted: #8b8680;
+
+  // Accent colors
+  --accent-primary: #d97757;
+  --accent-hover: #e89070;
+  --accent-dark: #c1664a;
+
+  // Input/Form colors
+  --input-bg: #ffffff;
+  --input-border: #d4cfc8;
+  --input-text: #2d2520;
+  --input-placeholder: #a89f97;
+
+  // Icon colors
+  --icon-default: #a89f97;
+  --icon-hover: #d97757;
+
+  // Shadows
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+// ===== CSS VARIABLE MIXINS =====
+// Use these mixins to easily apply theme colors in your SCSS
+
+@mixin text-primary {
+  color: var(--text-primary);
+}
+
+@mixin text-secondary {
+  color: var(--text-secondary);
+}
+
+@mixin text-muted {
+  color: var(--text-muted);
+}
+
+@mixin bg-primary {
+  background-color: var(--bg-primary);
+}
+
+@mixin bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+@mixin accent-color {
+  color: var(--accent-primary);
+}
+
+@mixin accent-bg {
+  background-color: var(--accent-primary);
+}
+
+@mixin input-style {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+
+  &::placeholder {
+    color: var(--input-placeholder);
+  }
+}
+
+@mixin shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+@mixin shadow-md {
+  box-shadow: var(--shadow-md);
+}

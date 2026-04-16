@@ -1,42 +1,87 @@
-main{
-    min-height: 100vh;
-    width: 100%;
+@use "../../styles/theme-variables";
+
+main {
+  min-height: 100vh;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .form-container {
+    min-width: 350px;
 
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+  }
 
-    .form-container{
-        min-width: 350px;
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
 
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    input {
+      border: none;
+      outline: none;
+      padding-inline: 1rem;
+      padding-block: 0.75rem;
+      border-radius: 0.75rem;
+      background-color: var(--input-bg);
+      color: var(--input-text);
+      transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+
+      &::placeholder {
+        color: var(--input-placeholder);
+      }
     }
 
-    form {
+    .password-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      input {
+        width: 100%;
+        padding-right: 2.75rem;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: 1rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        color: var(--icon-default);
         display: flex;
-        flex-direction: column;
-        gap: 1.75rem;
-    }
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        transition: color 0.2s ease;
 
-
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        input{
-            border: none;
-            outline: none;
-            padding-inline: 1rem;
-            padding-block: 0.75rem;
-            border-radius: 0.75rem;
+        &:hover {
+          color: var(--icon-hover);
         }
-    }
 
-    a{
-        color: #e1034d;
-        text-decoration: none;
+        &:focus {
+          outline: none;
+          color: var(--icon-hover);
+        }
+      }
     }
+  }
+
+  a {
+    color: var(--accent-primary);
+    text-decoration: none;
+  }
 }
