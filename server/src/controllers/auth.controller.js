@@ -38,7 +38,12 @@ async function registerUserController(req, res) {
     expiresIn: "1d",
   });
 
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true, // Prevents JavaScript from reading the cookie
+    secure: true, // REQUIRED for cross-site cookies (forces HTTPS)
+    sameSite: "none", // REQUIRED for cross-site cookies (allows Vercel -> Render)
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  });
 
   res.status(201).json({
     message: "User registered successfully",
@@ -70,11 +75,16 @@ async function loginUserController(req, res) {
     return res.status(400).json({ message: "Invalid email or password" });
   }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1d",
   });
 
-  res.cookie("token", token);
+  res.cookie("token", token, {
+    httpOnly: true, // Prevents JavaScript from reading the cookie
+    secure: true, // REQUIRED for cross-site cookies (forces HTTPS)
+    sameSite: "none", // REQUIRED for cross-site cookies (allows Vercel -> Render)
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+  });
 
   res.status(200).json({
     message: "User logged in successfully",
@@ -84,7 +94,6 @@ async function loginUserController(req, res) {
       email: user.email,
     },
   });
-
 }
 
 /**
@@ -121,8 +130,12 @@ async function getMeController(req, res) {
       username: user.username,
       email: user.email,
     },
-  })
+  });
 }
 
-
-export { registerUserController, loginUserController, logoutUserController, getMeController };
+export {
+  registerUserController,
+  loginUserController,
+  logoutUserController,
+  getMeController,
+};
