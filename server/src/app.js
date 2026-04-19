@@ -13,8 +13,8 @@ app.use(cors({
 
 import authRouter from './routes/auth.routes.js'; // require all the routes here and use them in the app
 import interviewRouter from './routes/interview.routes.js';
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+app.get('/health', (req, res) => {
+    res.send('Server is healthy');
 });
 // using all the routes here
 app.use('/api/auth', authRouter);
